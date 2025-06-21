@@ -22,7 +22,8 @@ t-docker">Déploiement Docker</a>
 ## 📸 Captures d'écran
 
 ### Interface principale
-![Uploading Capture d'écran 2025-06-21 031059.png…]()
+<img width="622" alt="Capture d'écran 2025-06-21 031059" src="https://github.com/user-attachments/assets/a7a1d889-1b5f-4bbe-9469-c0fdc07133f1" />
+
 
 *Interface utilisateur intuitive pour l'upload et l'analyse d'images médicales*
 
