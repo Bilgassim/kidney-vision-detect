@@ -1,73 +1,279 @@
-# Welcome to your Lovable project
 
-## Project info
+# KidneyVision - Détection intelligente des calculs rénaux
 
-**URL**: https://lovable.dev/projects/7d78e6df-c085-439d-8b06-de9ed591d35b
+<div align="center">
+  <img src="public/placeholder.svg" alt="KidneyVision Logo" width="120" height="120" />
+  
+  <p align="center">
+    Application d'IA médicale pour l'analyse d'images radiologiques
+    <br />
+    <a href="https://lovable.dev/projects/7d78e6df-c085-439d-8b06-de9ed591d35b"><strong>Voir le projet Lovable »</strong></a>
+    <br />
+    <br />
+    <a href="#captures-décran">Captures d'écran</a>
+    ·
+    <a href="#installation">Installation</a>
+    ·
+    <a href="#déploiement-docker">Déploiement Docker</a>
+  </p>
+</div>
 
-## How can I edit this code?
+## 📸 Captures d'écran
 
-There are several ways of editing your application.
+### Interface principale
+![Interface principale de KidneyVision](public/placeholder.svg)
+*Interface utilisateur intuitive pour l'upload et l'analyse d'images médicales*
 
-**Use Lovable**
+### Résultats d'analyse
+![Résultats d'analyse avec heatmap](public/placeholder.svg)
+*Affichage des résultats de prédiction avec visualisation heatmap et score de confiance*
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/7d78e6df-c085-439d-8b06-de9ed591d35b) and start prompting.
+### Upload d'image
+![Zone de glisser-déposer](public/placeholder.svg)
+*Zone de glisser-déposer responsive pour l'upload d'images radiologiques*
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🚀 Technologies utilisées
 
-**Use your preferred IDE**
+- **Frontend**: React 18, TypeScript, Vite
+- **UI/UX**: Tailwind CSS, shadcn/ui
+- **État**: TanStack Query (React Query)
+- **Routage**: React Router
+- **Icons**: Lucide React
+- **Déploiement**: Docker, Nginx
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 📋 Prérequis
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Node.js 18+ et npm
+- Docker et Docker Compose (pour le déploiement)
+- Backend FastAPI avec endpoint `/predict`
 
-Follow these steps:
+## 🛠️ Installation locale
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+```bash
+# Cloner le repository
+git clone <votre-repo-url>
+cd kidneyvision
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Installer les dépendances
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Créer le fichier d'environnement
+cp .env.example .env
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Configurer l'URL de votre API
+echo "VITE_API_URL=http://localhost:8000" > .env
+
+# Lancer en mode développement
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+L'application sera accessible sur `http://localhost:5173`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🐳 Déploiement Docker
 
-**Use GitHub Codespaces**
+### Déploiement rapide (Production)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```bash
+# Build et lancement avec Docker Compose
+docker-compose up -d
 
-## What technologies are used for this project?
+# Vérifier les logs
+docker-compose logs -f
 
-This project is built with:
+# Arrêter les services
+docker-compose down
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+L'application sera accessible sur `http://localhost:3000`
 
-## How can I deploy this project?
+### Développement avec Docker
 
-Simply open [Lovable](https://lovable.dev/projects/7d78e6df-c085-439d-8b06-de9ed591d35b) and click on Share -> Publish.
+```bash
+# Lancer en mode développement
+docker-compose -f docker-compose.dev.yml up
 
-## Can I connect a custom domain to my Lovable project?
+# Avec rebuild forcé
+docker-compose -f docker-compose.dev.yml up --build
 
-Yes, you can!
+# Arrêter le développement
+docker-compose -f docker-compose.dev.yml down
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+L'application de développement sera accessible sur `http://localhost:8080`
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Build manuel de l'image
+
+```bash
+# Build de l'image frontend
+docker build -t kidneyvision-frontend .
+
+# Lancer le container
+docker run -d \
+  --name kidneyvision-app \
+  -p 3000:80 \
+  -e VITE_API_URL=https://votre-backend-url.com \
+  kidneyvision-frontend
+
+# Voir les logs
+docker logs kidneyvision-app
+
+# Arrêter le container
+docker stop kidneyvision-app && docker rm kidneyvision-app
+```
+
+## 🔧 Configuration
+
+### Variables d'environnement
+
+```bash
+# .env
+VITE_API_URL=https://votre-backend-url.com
+```
+
+### Configuration CORS Backend (FastAPI)
+
+```python
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",      # Docker frontend
+        "http://localhost:8080",      # Dev Docker
+        "http://localhost:5173",      # Vite dev server
+        "https://*.lovable.app",      # Domaines Lovable
+    ],
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
+```
+
+### Format de réponse API requis
+
+```json
+{
+  "prediction": "kidney_stone" | "no_kidney_stone",
+  "confidence": 0.85,
+  "heatmap_url": "https://url-vers-votre-image-heatmap.jpg"
+}
+```
+
+## 📱 Scripts disponibles
+
+```bash
+# Développement local
+npm run dev                    # Serveur de développement Vite
+npm run build                  # Build de production
+npm run preview                # Prévisualisation du build
+
+# Docker - Développement
+docker-compose -f docker-compose.dev.yml up     # Dev avec hot reload
+docker-compose -f docker-compose.dev.yml down   # Arrêt dev
+
+# Docker - Production
+docker-compose up -d           # Lancement production
+docker-compose logs -f         # Logs en temps réel
+docker-compose down           # Arrêt production
+
+# Docker - Utilitaires
+docker build -t kidneyvision . # Build image manuelle
+docker system prune -f        # Nettoyage Docker
+```
+
+## 🏥 Fonctionnalités
+
+✅ **Upload d'images** - Glisser-déposer ou sélection de fichiers  
+✅ **Analyse IA** - Détection automatique des calculs rénaux  
+✅ **Visualisation** - Heatmap des zones détectées  
+✅ **Score de confiance** - Évaluation de la fiabilité  
+✅ **Interface responsive** - Compatible mobile et desktop  
+✅ **Gestion d'erreurs** - Messages d'erreur informatifs  
+
+## 🚀 Déploiement sur Lovable
+
+### Configuration automatique
+Lovable détecte automatiquement :
+- ✅ Framework : React + Vite
+- ✅ Commande d'installation : `npm install`
+- ✅ Commande de build : `npm run build`
+- ✅ Dossier de build : `dist`
+
+### Déploiement en un clic
+1. Cliquez sur **"Publish"** en haut à droite dans Lovable
+2. Configurez `VITE_API_URL` dans Project > Settings > Environment
+3. Votre app sera accessible via une URL `*.lovable.app`
+
+## 🔍 Troubleshooting
+
+### Erreurs communes
+
+**Erreur CORS**
+```bash
+# Vérifiez que votre backend autorise l'origine du frontend
+# Ajoutez l'URL dans les origins CORS de votre API
+```
+
+**Container ne démarre pas**
+```bash
+# Vérifiez les logs
+docker-compose logs frontend
+
+# Vérifiez que le port n'est pas utilisé
+lsof -i :3000
+```
+
+**Erreur de build**
+```bash
+# Nettoyez et rebuild
+docker-compose down
+docker system prune -f
+docker-compose up --build
+```
+
+## 📊 Monitoring
+
+### Health checks
+- **Frontend** : `http://localhost:3000/health`
+- **Status API** : Intégré dans l'interface utilisateur
+
+### Logs Docker
+```bash
+# Logs de tous les services
+docker-compose logs -f
+
+# Logs du frontend uniquement
+docker-compose logs -f frontend
+
+# Logs avec timestamps
+docker-compose logs -f -t
+```
+
+## 🤝 Contribution
+
+1. Fork le projet
+2. Créez votre branche (`git checkout -b feature/AmazingFeature`)
+3. Committez vos changements (`git commit -m 'Add AmazingFeature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrez une Pull Request
+
+## 📄 Licence
+
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+
+## 📞 Support
+
+- **Documentation** : [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
+- **Issues** : [GitHub Issues](https://github.com/votre-repo/issues)
+- **Lovable** : [Project Dashboard](https://lovable.dev/projects/7d78e6df-c085-439d-8b06-de9ed591d35b)
+
+---
+
+<div align="center">
+  Développé avec ❤️ pour l'aide au diagnostic médical
+  <br />
+  <strong>KidneyVision</strong> - Technologie d'IA au service de la santé
+</div>
