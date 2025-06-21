@@ -7,21 +7,23 @@
   <p align="center">
     Application d'IA médicale pour l'analyse d'images radiologiques
     <br />
-    <a href="https://lovable.dev/projects/7d78e6df-c085-439d-8b06-de9ed591d35b"><strong>Voir le projet Lovable »</strong></a>
+    <a href="https://lovable.dev/projects/7d78e6df-c085-439d-8b06-de9ed591d35b"><strong>Voir le projet »</strong></a>
     <br />
     <br />
     <a href="#captures-décran">Captures d'écran</a>
     ·
     <a href="#installation">Installation</a>
     ·
-    <a href="#déploiement-docker">Déploiement Docker</a>
+    <a href="#déploiemen<img width="622" alt="Capture d'écran 2025-06-21 031059" src="https://github.com/user-attachments/assets/7ad5c992-c3eb-4c2a-9a21-0c7e3e4e1d4c" />
+t-docker">Déploiement Docker</a>
   </p>
 </div>
 
 ## 📸 Captures d'écran
 
 ### Interface principale
-![Interface principale de KidneyVision](public/placeholder.svg)
+![Uploading Capture d'écran 2025-06-21 031059.png…]()
+
 *Interface utilisateur intuitive pour l'upload et l'analyse d'images médicales*
 
 ### Résultats d'analyse
