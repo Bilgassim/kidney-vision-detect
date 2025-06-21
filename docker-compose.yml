@@ -1,0 +1,49 @@
+
+version: '3.8'
+
+services:
+  # Frontend React + Nginx
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - kidney-vision-network
+    restart: unless-stopped
+
+  # Backend FastAPI (à adapter selon votre configuration)
+  backend:
+    # Remplacez par votre image backend ou dockerfile
+    image: your-backend-image:latest
+    # build:
+    #   context: ./backend
+    #   dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - CORS_ORIGINS=http://localhost:3000,https://*.lovable.app
+      - MODEL_PATH=/app/models
+    volumes:
+      - ./models:/app/models:ro
+    networks:
+      - kidney-vision-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  kidney-vision-network:
+    driver: bridge
+
+volumes:
+  models:
+    driver: local

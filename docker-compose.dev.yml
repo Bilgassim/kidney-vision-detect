@@ -1,0 +1,37 @@
+
+version: '3.8'
+
+services:
+  # Frontend en mode développement
+  frontend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    networks:
+      - kidney-vision-dev
+    restart: unless-stopped
+
+  # Backend pour développement
+  backend-dev:
+    image: your-backend-dev-image:latest
+    ports:
+      - "8000:8000"
+    environment:
+      - ENV=development
+      - CORS_ORIGINS=http://localhost:8080,https://*.lovable.app
+    volumes:
+      - ./backend:/app
+    networks:
+      - kidney-vision-dev
+    restart: unless-stopped
+
+networks:
+  kidney-vision-dev:
+    driver: bridge

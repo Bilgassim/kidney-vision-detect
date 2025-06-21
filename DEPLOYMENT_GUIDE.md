@@ -1,31 +1,106 @@
 
 # Guide de déploiement - KidneyVision
 
-## Configuration requise
+## 🐳 Déploiement avec Docker (Recommandé)
 
-### 1. Variables d'environnement
-Créez un fichier `.env` à la racine du projet avec :
+### Prérequis
+- Docker et Docker Compose installés
+- Backend FastAPI prêt avec support CORS
+
+### 1. Déploiement rapide avec Docker Compose
+
+```bash
+# Cloner le projet
+git clone <votre-repo>
+cd kidneyvision
+
+# Créer le fichier .env
+cp .env.example .env
+# Modifier VITE_API_URL=http://localhost:8000
+
+# Lancer les services
+docker-compose up -d
+
+# Vérifier les logs
+docker-compose logs -f
 ```
+
+L'application sera accessible sur http://localhost:3000
+
+### 2. Build et déploiement manuel
+
+```bash
+# Build de l'image frontend
+docker build -t kidneyvision-frontend .
+
+# Lancer le container
+docker run -d \
+  --name kidneyvision-app \
+  -p 3000:80 \
+  -e VITE_API_URL=https://votre-backend-url.com \
+  kidneyvision-frontend
+```
+
+### 3. Développement avec Docker
+
+```bash
+# Lancer en mode développement
+docker-compose -f docker-compose.dev.yml up
+
+# Accéder à l'app sur http://localhost:8080
+```
+
+### 4. Production avec registre Docker
+
+```bash
+# Tag et push vers votre registre
+docker tag kidneyvision-frontend your-registry/kidneyvision:latest
+docker push your-registry/kidneyvision:latest
+
+# Déployer depuis le registre
+docker run -d \
+  --name kidneyvision-prod \
+  -p 80:80 \
+  -e VITE_API_URL=https://api.votre-domaine.com \
+  your-registry/kidneyvision:latest
+```
+
+## ☁️ Déploiement sur Lovable (Alternative)
+
+### Configuration automatique
+Lovable détecte automatiquement :
+- ✅ Framework : React + Vite
+- ✅ Commande d'installation : `npm install`
+- ✅ Commande de build : `npm run build`
+- ✅ Dossier de build : `dist`
+
+### Déploiement automatique
+1. Cliquez sur le bouton "Publish" en haut à droite
+2. Votre app sera accessible via une URL `*.lovable.app`
+3. Configurez vos variables d'environnement dans Project > Settings
+
+## 🔧 Configuration
+
+### Variables d'environnement
+```bash
+# .env
 VITE_API_URL=https://votre-backend-url.com
 ```
 
-### 2. Configuration CORS sur votre backend FastAPI
-Assurez-vous que votre backend FastAPI accepte les requêtes depuis Lovable :
-
+### Configuration CORS sur votre backend FastAPI
 ```python
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# Configuration CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "http://localhost:3000",  # Docker frontend
+        "http://localhost:8080",  # Développement local
         "https://*.lovable.app",  # Domaines Lovable
-        "https://your-custom-domain.com",  # Votre domaine personnalisé
-        "http://localhost:3000",  # Développement local
-        "http://localhost:8080",  # Développement local Lovable
+        "https://your-custom-domain.com",  # Votre domaine
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST"],
@@ -33,9 +108,7 @@ app.add_middleware(
 )
 ```
 
-### 3. Format de réponse attendu de votre API
-Votre endpoint `/predict` doit retourner :
-
+### Format de réponse API requis
 ```json
 {
   "prediction": "kidney_stone" | "no_kidney_stone",
@@ -44,60 +117,56 @@ Votre endpoint `/predict` doit retourner :
 }
 ```
 
-OU
-
-```json
-{
-  "has_kidney_stone": true,
-  "probability": 0.85,
-  "heatmapUrl": "https://url-vers-votre-image-heatmap.jpg"
-}
-```
-
-## Déploiement sur Lovable
-
-### 1. Configuration automatique
-Lovable détecte automatiquement :
-- ✅ Framework : React + Vite
-- ✅ Commande d'installation : `npm install`
-- ✅ Commande de build : `npm run build`
-- ✅ Dossier de build : `dist`
-
-### 2. Déploiement automatique
-1. Cliquez sur le bouton "Publish" en haut à droite
-2. Votre app sera accessible via une URL `*.lovable.app`
-3. Configurez vos variables d'environnement dans Project > Settings
-
-### 3. Intégration GitHub pour redéploiement automatique
-1. Connectez votre projet à GitHub via le bouton GitHub
-2. Chaque push sur la branche principale redéploiera automatiquement
-3. Vous pouvez suivre le statut des déploiements dans l'interface Lovable
-
-### 4. Domaine personnalisé
-1. Allez dans Project > Settings > Domains
-2. Ajoutez votre domaine personnalisé
-3. Configurez vos DNS selon les instructions
-
-## Test de l'API
-
-Vous pouvez tester votre backend avec cette commande curl :
+## 🚀 Scripts utiles
 
 ```bash
-curl -X POST "https://votre-backend-url.com/predict" \
-  -H "Content-Type: multipart/form-data" \
-  -F "file=@votre-image.jpg"
+# Build local
+npm run build
+
+# Développement local
+npm run dev
+
+# Docker - Build image
+docker build -t kidneyvision .
+
+# Docker - Développement
+docker-compose -f docker-compose.dev.yml up
+
+# Docker - Production
+docker-compose up -d
+
+# Docker - Logs
+docker-compose logs -f frontend
+
+# Docker - Arrêt
+docker-compose down
 ```
 
-## Troubleshooting
+## 🔍 Troubleshooting
 
 ### Erreur CORS
-- Vérifiez que votre backend autorise les domaines Lovable
-- Ajoutez `https://*.lovable.app` dans vos origins autorisés
+- Vérifiez que votre backend autorise l'origine du frontend
+- Ajoutez l'URL de votre container dans les origins autorisés
 
-### Erreur 404 sur l'API
-- Vérifiez que `VITE_API_URL` est correctement configuré
-- Testez votre endpoint `/predict` indépendamment
+### Erreur de connexion API
+- Vérifiez que `VITE_API_URL` pointe vers l'URL correcte
+- En mode Docker, utilisez les noms de services dans le réseau
 
-### Image non affichée
-- Assurez-vous que `heatmap_url` retourne une URL publique accessible
-- Vérifiez que l'image a les bons headers CORS
+### Container ne démarre pas
+- Vérifiez les logs : `docker-compose logs frontend`
+- Vérifiez que le port n'est pas déjà utilisé
+
+## 📊 Monitoring
+
+### Health checks
+- Frontend : http://localhost:3000/health
+- API status intégré dans l'application
+
+### Logs
+```bash
+# Logs en temps réel
+docker-compose logs -f
+
+# Logs d'un service spécifique
+docker-compose logs -f frontend
+```
