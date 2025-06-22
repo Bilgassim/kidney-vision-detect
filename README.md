@@ -2,12 +2,9 @@
 # KidneyVision - Détection intelligente des calculs rénaux
 
 <div align="center">
-  <img src="public/placeholder.svg" alt="KidneyVision Logo" width="120" height="120" />
   
   <p align="center">
     Application d'IA médicale pour l'analyse d'images radiologiques
-    <br />
-    <a href="https://lovable.dev/projects/7d78e6df-c085-439d-8b06-de9ed591d35b"><strong>Voir le projet »</strong></a>
     <br />
     <br />
     <a href="#captures-décran">Captures d'écran</a>
