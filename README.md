@@ -217,7 +217,7 @@ Lovable détecte automatiquement :
 # Ajoutez l'URL dans les origins CORS de votre API
 ```
 
-**Container ne démarre pas**
+**Container ne démarre pas** 
 ```bash
 # Vérifiez les logs
 docker-compose logs frontend
