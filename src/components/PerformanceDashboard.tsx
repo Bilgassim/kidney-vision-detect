@@ -1,190 +1,266 @@
 
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
-import { Activity, Target, TrendingUp, CheckCircle } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
+import { Activity, TrendingUp, Users, Clock, AlertCircle, CheckCircle } from 'lucide-react';
 
-interface PerformanceMetrics {
-  precision: number;
-  recall: number;
-  f1Score: number;
-  auc: number;
-  accuracy: number;
-}
+const PerformanceDashboard: React.FC = () => {
+  // Données simulées pour les métriques de performance
+  const performanceMetrics = {
+    accuracy: 94.2,
+    precision: 91.8,
+    recall: 96.5,
+    f1Score: 94.1,
+    auc: 0.967,
+    processingTime: 2.3, // secondes
+    totalAnalyses: 1247,
+    successRate: 98.2
+  };
 
-interface PerformanceDashboardProps {
-  metrics?: PerformanceMetrics;
-  trainingData?: any[];
-  validationData?: any[];
-  testData?: any[];
-}
-
-const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({ 
-  metrics = {
-    precision: 0.92,
-    recall: 0.89,
-    f1Score: 0.90,
-    auc: 0.95,
-    accuracy: 0.91
-  },
-  trainingData,
-  validationData,
-  testData
-}) => {
-  const performanceData = [
-    { name: 'Précision', value: metrics.precision * 100, color: '#3B82F6' },
-    { name: 'Rappel', value: metrics.recall * 100, color: '#10B981' },
-    { name: 'F1-Score', value: metrics.f1Score * 100, color: '#F59E0B' },
-    { name: 'AUC', value: metrics.auc * 100, color: '#EF4444' },
-    { name: 'Exactitude', value: metrics.accuracy * 100, color: '#8B5CF6' }
+  const weeklyData = [
+    { day: 'Lun', analyses: 178, accuracy: 94.1, errors: 3 },
+    { day: 'Mar', analyses: 196, accuracy: 95.2, errors: 2 },
+    { day: 'Mer', analyses: 203, accuracy: 93.8, errors: 5 },
+    { day: 'Jeu', analyses: 185, accuracy: 94.7, errors: 4 },
+    { day: 'Ven', analyses: 221, accuracy: 95.1, errors: 2 },
+    { day: 'Sam', analyses: 156, accuracy: 93.2, errors: 6 },
+    { day: 'Dim', analyses: 108, accuracy: 92.9, errors: 8 }
   ];
 
-  const evolutionData = [
-    { epoch: 1, training: 0.75, validation: 0.73, test: 0.71 },
-    { epoch: 5, training: 0.85, validation: 0.82, test: 0.80 },
-    { epoch: 10, training: 0.90, validation: 0.87, test: 0.85 },
-    { epoch: 15, training: 0.93, validation: 0.90, test: 0.89 },
-    { epoch: 20, training: 0.95, validation: 0.92, test: 0.91 }
+  const distributionData = [
+    { name: 'Calculs détectés', value: 687, color: '#ef4444' },
+    { name: 'Pas de calculs', value: 560, color: '#22c55e' }
   ];
 
-  const MetricCard = ({ icon: Icon, title, value, subtitle, color }: any) => (
-    <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium text-gray-600">{title}</p>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
-          <p className="text-xs text-gray-500">{subtitle}</p>
-        </div>
-        <div className={`p-3 rounded-full bg-${color}-100`}>
-          <Icon className={`w-6 h-6 text-${color}-600`} />
-        </div>
-      </div>
-    </div>
-  );
+  const modelComparison = [
+    { model: 'CNN Base', accuracy: 89.2, precision: 87.1, recall: 91.3 },
+    { model: 'ResNet-50', accuracy: 92.8, precision: 90.5, recall: 94.2 },
+    { model: 'EfficientNet', accuracy: 94.2, precision: 91.8, recall: 96.5 },
+    { model: 'Vision Transformer', accuracy: 93.1, precision: 92.3, recall: 93.8 }
+  ];
+
+  const getStatusColor = (value: number, threshold: number = 90) => {
+    return value >= threshold ? 'text-green-600' : value >= 80 ? 'text-yellow-600' : 'text-red-600';
+  };
+
+  const getStatusIcon = (value: number, threshold: number = 90) => {
+    return value >= threshold ? CheckCircle : AlertCircle;
+  };
 
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-lg p-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center space-x-2">
-          <Activity className="w-6 h-6 text-blue-600" />
-          <span>Dashboard de Performance - Métriques en Temps Réel</span>
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+          <Activity className="w-6 h-6 mr-2 text-blue-600" />
+          Dashboard de Performance - KidneyVision IA
         </h2>
 
         {/* Métriques principales */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <MetricCard
-            icon={Target}
-            title="Précision"
-            value={`${(metrics.precision * 100).toFixed(1)}%`}
-            subtitle="Vrais positifs / (VP + FP)"
-            color="blue"
-          />
-          <MetricCard
-            icon={CheckCircle}
-            title="Rappel"
-            value={`${(metrics.recall * 100).toFixed(1)}%`}
-            subtitle="Vrais positifs / (VP + FN)"
-            color="green"
-          />
-          <MetricCard
-            icon={TrendingUp}
-            title="F1-Score"
-            value={`${(metrics.f1Score * 100).toFixed(1)}%`}
-            subtitle="Moyenne harmonique P/R"
-            color="orange"
-          />
-          <MetricCard
-            icon={Activity}
-            title="AUC-ROC"
-            value={`${(metrics.auc * 100).toFixed(1)}%`}
-            subtitle="Aire sous la courbe ROC"
-            color="purple"
-          />
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600">Précision Globale</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <span className={`text-2xl font-bold ${getStatusColor(performanceMetrics.accuracy)}`}>
+                  {performanceMetrics.accuracy}%
+                </span>
+                {React.createElement(getStatusIcon(performanceMetrics.accuracy), { 
+                  className: `w-5 h-5 ${getStatusColor(performanceMetrics.accuracy)}` 
+                })}
+              </div>
+              <Progress value={performanceMetrics.accuracy} className="mt-2" />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600">Précision (Precision)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <span className={`text-2xl font-bold ${getStatusColor(performanceMetrics.precision)}`}>
+                  {performanceMetrics.precision}%
+                </span>
+                {React.createElement(getStatusIcon(performanceMetrics.precision), { 
+                  className: `w-5 h-5 ${getStatusColor(performanceMetrics.precision)}` 
+                })}
+              </div>
+              <Progress value={performanceMetrics.precision} className="mt-2" />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600">Rappel (Recall)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <span className={`text-2xl font-bold ${getStatusColor(performanceMetrics.recall)}`}>
+                  {performanceMetrics.recall}%
+                </span>
+                {React.createElement(getStatusIcon(performanceMetrics.recall), { 
+                  className: `w-5 h-5 ${getStatusColor(performanceMetrics.recall)}` 
+                })}
+              </div>
+              <Progress value={performanceMetrics.recall} className="mt-2" />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600">Score F1</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <span className={`text-2xl font-bold ${getStatusColor(performanceMetrics.f1Score)}`}>
+                  {performanceMetrics.f1Score}%
+                </span>
+                {React.createElement(getStatusIcon(performanceMetrics.f1Score), { 
+                  className: `w-5 h-5 ${getStatusColor(performanceMetrics.f1Score)}` 
+                })}
+              </div>
+              <Progress value={performanceMetrics.f1Score} className="mt-2" />
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Graphiques de performance */}
+        {/* Statistiques supplémentaires */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-blue-50 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-blue-600 font-medium">AUC-ROC</p>
+                <p className="text-2xl font-bold text-blue-700">{performanceMetrics.auc}</p>
+              </div>
+              <TrendingUp className="w-8 h-8 text-blue-600" />
+            </div>
+          </div>
+
+          <div className="bg-green-50 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-green-600 font-medium">Temps Moyen</p>
+                <p className="text-2xl font-bold text-green-700">{performanceMetrics.processingTime}s</p>
+              </div>
+              <Clock className="w-8 h-8 text-green-600" />
+            </div>
+          </div>
+
+          <div className="bg-purple-50 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-purple-600 font-medium">Analyses Totales</p>
+                <p className="text-2xl font-bold text-purple-700">{performanceMetrics.totalAnalyses.toLocaleString()}</p>
+              </div>
+              <Users className="w-8 h-8 text-purple-600" />
+            </div>
+          </div>
+
+          <div className="bg-orange-50 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-orange-600 font-medium">Taux Succès</p>
+                <p className="text-2xl font-bold text-orange-700">{performanceMetrics.successRate}%</p>
+              </div>
+              <CheckCircle className="w-8 h-8 text-orange-600" />
+            </div>
+          </div>
+        </div>
+
+        {/* Graphiques */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Graphique en barres des métriques */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="text-lg font-medium text-gray-800 mb-4">
-              Métriques de Performance Actuelles
-            </h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={performanceData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis domain={[0, 100]} />
-                <Tooltip formatter={(value) => [`${value}%`, 'Performance']} />
-                <Bar dataKey="value" fill="#3B82F6" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+          {/* Évolution hebdomadaire */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Évolution Hebdomadaire</CardTitle>
+              <CardDescription>Analyses et précision par jour</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={weeklyData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="day" />
+                  <YAxis yAxisId="left" />
+                  <YAxis yAxisId="right" orientation="right" />
+                  <Tooltip />
+                  <Legend />
+                  <Bar yAxisId="left" dataKey="analyses" fill="#3b82f6" name="Nombre d'analyses" />
+                  <Line yAxisId="right" type="monotone" dataKey="accuracy" stroke="#ef4444" name="Précision %" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
 
-          {/* Évolution des performances */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="text-lg font-medium text-gray-800 mb-4">
-              Évolution des Performances par Époque
-            </h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={evolutionData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="epoch" />
-                <YAxis domain={[0.6, 1]} />
-                <Tooltip formatter={(value) => [`${(value * 100).toFixed(1)}%`, '']} />
-                <Line 
-                  type="monotone" 
-                  dataKey="training" 
-                  stroke="#3B82F6" 
-                  strokeWidth={2}
-                  name="Entraînement"
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="validation" 
-                  stroke="#10B981" 
-                  strokeWidth={2}
-                  name="Validation"
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="test" 
-                  stroke="#EF4444" 
-                  strokeWidth={2}
-                  name="Test"
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          {/* Distribution des résultats */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Distribution des Résultats</CardTitle>
+              <CardDescription>Répartition des diagnostics</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={distributionData}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(1)}%`}
+                  >
+                    {distributionData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Informations complémentaires */}
-        <div className="mt-6 bg-blue-50 rounded-lg p-4">
-          <h4 className="text-sm font-semibold text-blue-800 mb-2">
-            Évaluation Clinique
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-            <div>
-              <span className="font-medium text-blue-700">Sensibilité:</span>
-              <span className="ml-2 text-blue-900">{(metrics.recall * 100).toFixed(1)}%</span>
-              <p className="text-xs text-blue-600 mt-1">
-                Capacité à détecter les vrais cas positifs
-              </p>
+        {/* Comparaison des modèles */}
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle>Comparaison des Modèles IA</CardTitle>
+            <CardDescription>Performance comparative des différents algorithmes</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left p-2">Modèle</th>
+                    <th className="text-center p-2">Précision</th>
+                    <th className="text-center p-2">Precision</th>
+                    <th className="text-center p-2">Recall</th>
+                    <th className="text-center p-2">Statut</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {modelComparison.map((model, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="p-2 font-medium">{model.model}</td>
+                      <td className="p-2 text-center">{model.accuracy}%</td>
+                      <td className="p-2 text-center">{model.precision}%</td>
+                      <td className="p-2 text-center">{model.recall}%</td>
+                      <td className="p-2 text-center">
+                        <Badge variant={model.model === 'EfficientNet' ? 'default' : 'secondary'}>
+                          {model.model === 'EfficientNet' ? 'Actuel' : 'Test'}
+                        </Badge>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <div>
-              <span className="font-medium text-blue-700">Spécificité:</span>
-              <span className="ml-2 text-blue-900">{((1 - (1 - metrics.precision)) * 100).toFixed(1)}%</span>
-              <p className="text-xs text-blue-600 mt-1">
-                Capacité à éviter les faux positifs
-              </p>
-            </div>
-            <div>
-              <span className="font-medium text-blue-700">Exactitude globale:</span>
-              <span className="ml-2 text-blue-900">{(metrics.accuracy * 100).toFixed(1)}%</span>
-              <p className="text-xs text-blue-600 mt-1">
-                Performance générale du modèle
-              </p>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
