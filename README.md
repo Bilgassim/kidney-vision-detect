@@ -25,24 +25,18 @@
 ## 📸 Captures d'écran
 
 ### Interface Principale
-![Interface principale KidneyVision](/lovable-uploads/425ef7de-2ae4-40ca-9c4f-477e659a14fc.png)
-*Interface clinique avec navigation vers les différents modules*
+<img width="937" alt="Image" src="https://github.com/user-attachments/assets/ff378eca-89a9-46af-a783-dbd6ad48b308" />
 
 ### Upload et Analyse d'Images
-![Upload d'images médicales](/lovable-uploads/d78f6782-6072-49d7-9c19-a31f2507f7d1.png)
+<img width="939" alt="Image" src="https://github.com/user-attachments/assets/b9f2e187-e2ad-4446-90c6-a262433fee96" />
+<img width="936" alt="Image" src="https://github.com/user-attachments/assets/913ec9f2-be76-4f54-8af1-802108489a71" />
+<img width="935" alt="Image" src="https://github.com/user-attachments/assets/bd4af561-9f72-4b88-b640-d0469352eced" />
 *Zone de glisser-déposer pour l'upload d'images radiologiques avec support DICOM*
 
 ### Dashboard de Performance
-![Dashboard de performance](/lovable-uploads/e03d2905-bd0f-4fe2-8207-df5e6fd563dc.png)
-*Métriques de performance du modèle IA avec précision, rappel et F1-score*
-
-
-https://github.com/user-attachments/assets/7c0f9819-8f3d-415a-8b4a-98cfdf27940c
-
-
-### Évolution Hebdomadaire
-![Évolution des analyses](/lovable-uploads/325f0836-1c8b-45f4-bfae-5fa8627a824d.png)
-*Tableau de bord avec métriques temps réel et évolution des analyses*
+<img width="929" alt="Image" src="https://github.com/user-attachments/assets/c1d7657c-590b-4ff8-bdee-4970e8f2c6e8" />
+<img width="933" alt="Image" src="https://github.com/user-attachments/assets/c7af77cc-f38c-4613-b726-93d1b239fb50" />
+<img width="933" alt="Image" src="https://github.com/user-attachments/assets/bc5ba091-610d-4aac-8819-70875df792ce" />
 
 ## 🚀 Démarrage Rapide
 
