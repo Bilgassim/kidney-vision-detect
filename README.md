@@ -17,6 +17,8 @@
     ·
     <a href="CLOUD_DEPLOYMENT.md">Déploiement Cloud</a>
   </p>
+  <video href="https://github.com/user-attachments/assets/6f106ea0-7893-4b3d-b30d-bd03263fb8a4"> Backend </video>
+  <video href="https://github.com/user-attachments/assets/661e4807-66a3-4234-a359-48482e3ea140">Frontend</video>
 </div>
 
 ## 📸 Captures d'écran
@@ -32,6 +34,10 @@
 ### Dashboard de Performance
 ![Dashboard de performance](/lovable-uploads/e03d2905-bd0f-4fe2-8207-df5e6fd563dc.png)
 *Métriques de performance du modèle IA avec précision, rappel et F1-score*
+
+
+https://github.com/user-attachments/assets/7c0f9819-8f3d-415a-8b4a-98cfdf27940c
+
 
 ### Évolution Hebdomadaire
 ![Évolution des analyses](/lovable-uploads/325f0836-1c8b-45f4-bfae-5fa8627a824d.png)
