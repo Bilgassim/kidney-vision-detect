@@ -1,6 +1,9 @@
 
 # KidneyVision - Système de Détection des Calculs Rénaux
-
+<div align="center">
+  <video href="https://github.com/user-attachments/assets/6f106ea0-7893-4b3d-b30d-bd03263fb8a4"> Backend </video> <span>
+  <video href="https://github.com/user-attachments/assets/661e4807-66a3-4234-a359-48482e3ea140"> Frontend </video>
+</div>
 <div align="center">
   
   <p align="center">
@@ -17,8 +20,6 @@
     ·
     <a href="CLOUD_DEPLOYMENT.md">Déploiement Cloud</a>
   </p>
-  <video href="https://github.com/user-attachments/assets/6f106ea0-7893-4b3d-b30d-bd03263fb8a4"> Backend </video>
-  <video href="https://github.com/user-attachments/assets/661e4807-66a3-4234-a359-48482e3ea140">Frontend</video>
 </div>
 
 ## 📸 Captures d'écran
