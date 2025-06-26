@@ -133,10 +133,9 @@ docker build -t backend .     # Backend
 
 ## 📞 Support
 
-- **Frontend Repo**: [GitHub Frontend](https://github.com/votre-frontend-repo)
+- **Frontend Repo**: [GitHub Frontend](https://github.com/Bilgassim/kidney-vision-detect)
 - **Backend Repo**: [GitHub Backend](https://github.com/Bilgassim/Kidney-stone-detection)
 - **Documentation API**: `http://localhost:8000/docs`
-- **Discord**: [Lovable Community](https://discord.com/channels/1119885301872070706)
 
 ## 📄 Licence
 
