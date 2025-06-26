@@ -63,6 +63,13 @@ const Index: React.FC = () => {
     setActiveTab('upload');
   };
 
+  // Transform PredictionResponse to match AnalysisResults expected format
+  const transformPredictionForAnalysis = (prediction: PredictionResponse) => ({
+    hasKidneyStone: prediction.prediction === 'stone',
+    confidence: prediction.confidence,
+    heatmapUrl: prediction.heatmap_url
+  });
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 'upload':
@@ -121,7 +128,7 @@ const Index: React.FC = () => {
 
             {(analysisResult || isAnalyzing) && (
               <AnalysisResults
-                prediction={analysisResult || { hasKidneyStone: false, confidence: 0 }}
+                prediction={analysisResult ? transformPredictionForAnalysis(analysisResult) : { hasKidneyStone: false, confidence: 0 }}
                 isLoading={isAnalyzing}
               />
             )}
@@ -140,7 +147,7 @@ const Index: React.FC = () => {
             />
             {analysisResult && (
               <AnalysisResults
-                prediction={analysisResult}
+                prediction={transformPredictionForAnalysis(analysisResult)}
                 isLoading={false}
               />
             )}
