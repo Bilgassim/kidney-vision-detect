@@ -7,9 +7,10 @@ import AnalysisResults from '@/components/AnalysisResults';
 import DicomViewer from '@/components/DicomViewer';
 import PerformanceDashboard from '@/components/PerformanceDashboard';
 import ClinicalNavigation from '@/components/ClinicalNavigation';
+import ApiConnectionTest from '@/components/ApiConnectionTest';
 import { kidneyStoneAPI, PredictionResponse } from '@/services/api';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Info, Stethoscope } from 'lucide-react';
+import { RefreshCw, Info, Stethoscope, Wifi } from 'lucide-react';
 
 const Index: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -41,7 +42,9 @@ const Index: React.FC = () => {
       const result = await kidneyStoneAPI.predictKidneyStone(selectedImage);
       setAnalysisResult(result);
       
-      toast.success('Analyse terminée avec succès');
+      // Adapter le message selon la prédiction
+      const predictionText = result.prediction === 'stone' ? 'Calcul rénal détecté' : 'Pas de calcul rénal détecté';
+      toast.success(`Analyse terminée: ${predictionText} (${(result.confidence * 100).toFixed(1)}% de confiance)`);
       console.log('Résultat de l\'analyse:', result);
       
       // Basculer automatiquement vers le visualiseur après l'analyse
@@ -65,6 +68,11 @@ const Index: React.FC = () => {
       case 'upload':
         return (
           <div className="space-y-8">
+            {/* Test de connexion API */}
+            <div className="flex justify-center">
+              <ApiConnectionTest />
+            </div>
+
             {/* Section d'information clinique */}
             <div className="max-w-4xl mx-auto bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-6 shadow-sm border border-blue-100">
               <div className="flex items-start space-x-3">
@@ -162,6 +170,15 @@ const Index: React.FC = () => {
                   Configuration de la connexion aux systèmes PACS hospitaliers
                   pour l'import automatique d'images DICOM.
                 </p>
+              </div>
+              
+              {/* Test de connexion dans les paramètres */}
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <h4 className="font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  <Wifi className="w-4 h-4" />
+                  Test de Connexion Backend
+                </h4>
+                <ApiConnectionTest />
               </div>
             </div>
           </div>
